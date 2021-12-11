@@ -1,5 +1,4 @@
 import UIKit
-
 extension UIButton {
     func setState(_ state: ButtonState, backgroundColor: UIColor, textColor: UIColor){
         switch state{

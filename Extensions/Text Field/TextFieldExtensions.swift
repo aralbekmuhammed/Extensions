@@ -11,10 +11,3 @@ extension UITextField{
         inputAccessoryView = toolbar
     }
 }
-public func getAttribute(text: String, fontName: String, fontSize: CGFloat, color: UIColor)->NSAttributedString{
-
-    let font = UIFont(name: fontName, size: fontSize)!
-    return NSAttributedString(string: text, attributes: [
-                                NSAttributedString.Key.foregroundColor : color,
-                                NSAttributedString.Key.font : font])
-}
