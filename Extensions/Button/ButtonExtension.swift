@@ -1,14 +1,18 @@
 import UIKit
 extension UIButton {
-    func setState(_ state: ButtonState, backgroundColor: UIColor, textColor: UIColor){
+    func setState(_ state: ButtonState, backgroundColor: UIColor? = nil, textColor: UIColor? = nil){
         switch state{
         case .enabled:
             self.isEnabled = true
         case .disabled:
             self.isEnabled = false
         }
-        self.backgroundColor = backgroundColor
-        self.setTitleColor(textColor, for: .normal)
+        if let backgroundColor = backgroundColor {
+            self.backgroundColor = backgroundColor
+        }
+        if let textColor = textColor {
+            self.setTitleColor(textColor, for: .normal)
+        }
     }
     
 }
