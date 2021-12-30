@@ -1,8 +1,10 @@
 import UIKit
 import StoreKit
 import SafariServices
-import JGProgressHUD
-let spinner = JGProgressHUD(style: .light)
+import AVFoundation
+import AVKit
+//import JGProgressHUD
+//let spinner = JGProgressHUD(style: .light)
 struct AlertAction{
     let text: String
     let type: UIAlertAction.Style
@@ -21,6 +23,25 @@ func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
    return screenshotImage
 }
 extension UIViewController {
+    var navBarHeight: CGFloat{
+        UIApplication.shared.statusBarFrame.size.height +
+        (self.navigationController?.navigationBar.frame.height ?? 0.0)
+
+    }
+    func setNavBar(cornerRadius: CGFloat,
+                   color: UIColor){
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        self.navigationController?.navigationBar.isTranslucent = true
+        let navBarView = UIView(frame: CGRect(x: 0,
+                                              y: 0,
+                                              width: UIScreen.main.bounds.width,
+                                              height: navBarHeight))
+        navBarView.do {
+            $0.roundCorners(corners: [.bottomRight, .bottomLeft], radius: cornerRadius)
+            $0.backgroundColor = color
+        }
+        self.view.addSubview(navBarView)
+    }
     func presentRateAlert(){
         guard let window = view.window,
         let scene = window.windowScene else{return}
@@ -35,6 +56,15 @@ extension UIViewController {
         present(SFSafariViewController(url: url),
                 animated: true) 
         
+    }
+    func openVideo(from url: URL){
+        let player = AVPlayer(url: url)
+        let playerController = AVPlayerViewController().then {
+            $0.player = player
+        }
+        present(playerController, animated: true) {
+            player.play()
+        }
     }
     func callToPhoneNumber(_ phoneNumber: String){
         guard let number = URL(string: "tel://" + phoneNumber) else {print("looks like it's something wrong with phone number"); return }

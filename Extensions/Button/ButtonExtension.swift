@@ -14,5 +14,7 @@ extension UIButton {
             self.setTitleColor(textColor, for: .normal)
         }
     }
-    
+    func adjustTitleToFitWidth(){
+        titleLabel?.adjustsFontSizeToFitWidth = true
+    }
 }

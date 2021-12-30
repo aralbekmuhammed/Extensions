@@ -16,6 +16,12 @@ extension UIView {
         layer.borderColor = color.cgColor
         layer.borderWidth = width
     }
+    func removeSubviews(){
+        subviews.forEach {
+            $0.removeFromSuperview()
+        }
+    }
+
     /// Drops shadow to view
     func dropShadow(color: UIColor, opacity: Float = 0.5, offSet: CGSize, radius: CGFloat = 1, scale: Bool = true) {
         layer.masksToBounds = false
