@@ -11,7 +11,9 @@ struct AlertAction{
     let type: UIAlertAction.Style
     var action: ((UIAlertAction) -> Void)? = nil
 }
-
+enum NavigationBarEdge{
+    case left,right
+}
 func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
     var screenshotImage :UIImage?
     let layer = UIApplication.shared.keyWindow!.layer
@@ -45,7 +47,24 @@ extension UIViewController {
         (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
     }
-    
+    func addButton(to edge: NavigationBarEdge,
+                   withImage image: UIImage,
+                   selector: Selector){
+        let button = UIButton().then {
+            $0.setImage(image, for: .normal)
+            $0.imageView?.contentMode = .scaleAspectFit
+            $0.addTarget(self,
+                         action: selector,
+                         for: .touchUpInside)
+        }
+        let buttonItem = UIBarButtonItem(customView: button)
+        switch edge {
+        case .left:
+            navigationItem.leftBarButtonItems = [buttonItem]
+        case .right:
+            navigationItem.rightBarButtonItems = [buttonItem]
+        }
+    }
     func presentRateAlert(){
         guard let window = view.window,
               let scene = window.windowScene else{return}
