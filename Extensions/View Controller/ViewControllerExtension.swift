@@ -48,11 +48,45 @@ extension UIViewController {
         
     }
     func addButton(to edge: NavigationBarEdge,
-                   withImage image: UIImage,
+                   withImage image: UIImage? = nil,
+                   spacing: CGFloat = .zero,
+                   title: String? = nil,
+                   titleColor: UIColor? = nil,
+                   titleFont: UIFont = .systemFont(ofSize: 18),
+                   contentInset: UIEdgeInsets = .zero,
                    selector: Selector){
         let button = UIButton().then {
+            //MARK: - TITLE
+            $0.setTitle(title,
+                        for: .normal)
+            $0.setTitleColor(titleColor,
+                             for: .normal)
+            $0.titleLabel?.font = titleFont
+            $0.titleLabel?.sizeToFit()
+            if let titleLabel = $0.titleLabel{
+                titleLabel.widthAnchor.constraint(equalToConstant: titleLabel.frame.width).isActive = true
+            }
+            //MARK: - INSET
+            if let _ = image,
+               let _ = title{
+                $0.titleEdgeInsets.left = spacing
+            }
+            $0.contentEdgeInsets = contentInset
+            if edge == .right{
+                let right = contentInset.right
+                $0.contentEdgeInsets.right = contentInset.left
+                $0.contentEdgeInsets.left = right
+            }
+            //MARK: - IMAGE
             $0.setImage(image, for: .normal)
             $0.imageView?.contentMode = .scaleAspectFit
+            //MARK: - Transforming
+            if edge == .right{
+                $0.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+                $0.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+                $0.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+            }
+            //MARK: - TARGET
             $0.addTarget(self,
                          action: selector,
                          for: .touchUpInside)
