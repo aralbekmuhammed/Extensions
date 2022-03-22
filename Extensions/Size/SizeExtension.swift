@@ -24,4 +24,11 @@ extension UIEdgeInsets{
               bottom: padding,
               right: .zero)
     }
+    
+    static func all(_ padding: CGFloat)->UIEdgeInsets{
+        .init(top: padding,
+              left: padding,
+              bottom: padding,
+              right: padding)
+    }
 }

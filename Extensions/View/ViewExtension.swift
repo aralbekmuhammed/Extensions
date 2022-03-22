@@ -1,5 +1,28 @@
 import UIKit
 extension UIView {
+    @IBInspectable
+    var cornerRadius: CGFloat {
+        set { layer.cornerRadius = newValue }
+        get { layer.cornerRadius }
+    }
+    
+    func setBorder(width: CGFloat,
+                   color: UIColor,
+                   strokeStart: CGFloat,
+                   strokeEnd: CGFloat){
+        let circlePath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+        // circle shape
+        let circleShape = CAShapeLayer().then {
+            $0.path = circlePath.cgPath
+            $0.strokeColor = color.cgColor
+            $0.fillColor = UIColor.clear.cgColor
+            $0.lineWidth = width
+            $0.strokeStart = strokeStart
+            $0.strokeEnd = strokeEnd
+        }
+        layer.addSublayer(circleShape)
+    }
+    
     /// Rounds corner radius of view
     func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: 0.0))
@@ -21,6 +44,16 @@ extension UIView {
             $0.removeFromSuperview()
         }
     }
+    
+    func clip(to view: UIView, with inset: UIEdgeInsets = .zero){
+        NSLayoutConstraint.activate([
+            topAnchor.constraint(equalTo: view.topAnchor, constant: inset.top),
+            leftAnchor.constraint(equalTo: view.leftAnchor, constant: inset.left),
+            rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0 - inset.right),
+            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0 - inset.bottom)
+        ])
+    }
+    
     func removeGestureRecognizers(){
         gestureRecognizers?.removeAll()
     }

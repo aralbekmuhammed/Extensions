@@ -4,16 +4,19 @@ import SafariServices
 import AVFoundation
 import AVKit
 import Then
-//import JGProgressHUD
-//let spinner = JGProgressHUD(style: .light)
+
 struct AlertAction{
     let text: String
     let type: UIAlertAction.Style
     var action: ((UIAlertAction) -> Void)? = nil
 }
+
+//fileprivate var currentHUD: HUD?
+
 enum NavigationBarEdge{
     case left,right
 }
+
 func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
     var screenshotImage :UIImage?
     let layer = UIApplication.shared.keyWindow!.layer
@@ -25,7 +28,9 @@ func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
     UIGraphicsEndImageContext()
     return screenshotImage
 }
+
 extension UIViewController {
+    
     //MARK: - Navigation Bar
     func setNavBar(cornerRadius: CGFloat,
                    color: UIColor){
@@ -47,13 +52,26 @@ extension UIViewController {
         (self.navigationController?.navigationBar.frame.height ?? 0.0)
         
     }
+    
+    func presentErrorAlert(completionHandler: ( () -> () )? = nil){
+        showAlert(withTitle: "Ошибка",
+                  message: "Что-то пошло не так. Попробуйте позже",
+                  actions: [AlertAction(text: "Ок",
+                                        type: .default, action: { _ in
+            completionHandler?()
+        })])
+    }
+    
     func addButton(to edge: NavigationBarEdge,
                    withImage image: UIImage? = nil,
                    spacing: CGFloat = .zero,
                    title: String? = nil,
                    titleColor: UIColor? = nil,
                    titleFont: UIFont = .systemFont(ofSize: 18),
-                   contentInset: UIEdgeInsets = .zero,
+                   contentInset: UIEdgeInsets = .init(top: 5,
+                                                      left: 5,
+                                                      bottom: 5,
+                                                      right: 5),
                    selector: Selector){
         let button = UIButton().then {
             //MARK: - TITLE
@@ -86,7 +104,7 @@ extension UIViewController {
                 $0.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
                 $0.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
             }
-            //MARK: - TARGET
+            
             $0.addTarget(self,
                          action: selector,
                          for: .touchUpInside)
@@ -147,10 +165,30 @@ extension UIViewController {
     func presentViewController(viewController: UIViewController,
                                presentationStyle: UIModalPresentationStyle,
                                transitionStyle: UIModalTransitionStyle,
-                               animated: Bool){
+                               animated: Bool,
+                               completionHandler: ( ()->() )? = nil){
         viewController.modalPresentationStyle = presentationStyle
         viewController.modalTransitionStyle = transitionStyle
-        present(viewController, animated: animated)
+        present(viewController, animated: animated, completion: completionHandler)
     }
+    
+    //    func showHUD(animated: Bool = true, completionHandler: ( ()->() )? = nil){
+    //        let hud = HUD()
+    //        currentHUD = hud
+    //        presentViewController(viewController: hud,
+    //                              presentationStyle: .overFullScreen,
+    //                              transitionStyle: .crossDissolve,
+    //                              animated: animated,
+    //                              completionHandler: completionHandler)
+    //    }
+    
+    //    func dismissHUD(animated: Bool = true, completionHandler: ( ()->() )? = nil){
+    //        currentHUD?.dismiss(animated: animated, completion: {
+    //            currentHUD = nil
+    //            completionHandler?()
+    //        })
+    //
+    //    }
+    
 }
 

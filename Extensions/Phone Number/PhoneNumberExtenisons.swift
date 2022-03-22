@@ -1,3 +1,4 @@
+import Foundation
 func formatPhoneNumber(phoneNumber: String, pattern: String = "(###) ###-####") -> String {
     let replacmentCharacter: Character = "#"
     var pureNumber = phoneNumber.replacingOccurrences( of: "[^0-9]", with: "", options: .regularExpression)
@@ -9,4 +10,9 @@ func formatPhoneNumber(phoneNumber: String, pattern: String = "(###) ###-####") 
         pureNumber.insert(patternCharacter, at: stringIndex)
     }
     return pureNumber
+}
+func getPhoneNumber(from text: String) -> Int?{
+    var phoneNumber = text.replacingOccurrences(of: "+7", with: "8")
+    phoneNumber = phoneNumber.replacingOccurrences( of:"[^0-9]", with: "", options: .regularExpression)
+    return Int(phoneNumber)
 }

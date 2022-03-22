@@ -6,7 +6,7 @@ extension UITextField{
                                         target: nil, action: nil)
         let doneButton = UIBarButtonItem(title: text, style: .done,
                                          target: self, action: #selector(endEditing))
-        toolbar.setItems([flexSpace, doneButton], animated: true)
+        toolbar.setItems([flexSpace, doneButton], animated: false)
         toolbar.sizeToFit()
         inputAccessoryView = toolbar
     }
