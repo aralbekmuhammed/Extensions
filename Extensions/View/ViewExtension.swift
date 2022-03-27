@@ -6,6 +6,24 @@ extension UIView {
         get { layer.cornerRadius }
     }
     
+    @IBInspectable
+    var borderWidth: CGFloat{
+        set{ layer.borderWidth = newValue }
+        get{ layer.borderWidth }
+    }
+    
+    @IBInspectable
+    var borderColor: UIColor?{
+        set{ layer.borderColor = newValue?.cgColor }
+        get{
+            if let cgColor = layer.borderColor{
+                return UIColor(cgColor: cgColor)
+            }else{
+                return nil
+            }
+        }
+    }
+    
     func setBorder(width: CGFloat,
                    color: UIColor,
                    strokeStart: CGFloat,

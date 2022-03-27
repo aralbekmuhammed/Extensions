@@ -2,4 +2,11 @@
 enum ButtonState {
     case enabled
     case disabled
+    mutating func toggle(){
+        if self == .enabled{
+            self = .disabled
+        }else{
+            self = .enabled
+        }
+    }
 }

@@ -1,5 +1,15 @@
 import UIKit
 extension UIButton {
+    
+    @IBInspectable
+    var adjustsFontSizeToFitWidth: Bool{
+        get{
+            titleLabel?.adjustsFontSizeToFitWidth ?? false
+        }set{
+            titleLabel?.adjustsFontSizeToFitWidth = newValue
+        }
+    }
+    
     func setState(_ state: ButtonState, backgroundColor: UIColor? = nil, textColor: UIColor? = nil){
         switch state{
         case .enabled:
