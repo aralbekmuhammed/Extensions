@@ -1,6 +1,7 @@
 import AVFoundation
 import UIKit.UIImage
 import AVKit
+import SDWebImage
 extension UIImage{
     convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
         let rect = CGRect(origin: .zero, size: size)

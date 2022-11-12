@@ -7,46 +7,23 @@ extension UIView {
     }
     
     @IBInspectable
-    var borderWidth: CGFloat{
-        set{ layer.borderWidth = newValue }
-        get{ layer.borderWidth }
+    var bordersWidth: CGFloat{
+        set { layer.borderWidth = newValue }
+        get { layer.borderWidth }
     }
     
     @IBInspectable
-    var borderColor: UIColor?{
-        set{ layer.borderColor = newValue?.cgColor }
-        get{
-            if let cgColor = layer.borderColor{
-                return UIColor(cgColor: cgColor)
-            }else{
-                return nil
-            }
-        }
-    }
-    
-    func setBorder(width: CGFloat,
-                   color: UIColor,
-                   strokeStart: CGFloat,
-                   strokeEnd: CGFloat){
-        let circlePath = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
-        // circle shape
-        let circleShape = CAShapeLayer().then {
-            $0.path = circlePath.cgPath
-            $0.strokeColor = color.cgColor
-            $0.fillColor = UIColor.clear.cgColor
-            $0.lineWidth = width
-            $0.strokeStart = strokeStart
-            $0.strokeEnd = strokeEnd
-        }
-        layer.addSublayer(circleShape)
+    var bordersColor: UIColor{
+        set { layer.borderColor = newValue.cgColor }
+        get { layer.borderColor != nil ? UIColor(cgColor: layer.borderColor!) : .clear }
     }
     
     /// Rounds corner radius of view
     func roundCorners(corners: UIRectCorner, radius: CGFloat) {
-        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: 0.0))
+        let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
         let mask = CAShapeLayer()
         mask.path = path.cgPath
-        layer.mask = mask
+        self.layer.mask = mask
     }
     /// Circles View
     func circle(){
@@ -57,19 +34,33 @@ extension UIView {
         layer.borderColor = color.cgColor
         layer.borderWidth = width
     }
+    
+    func addSubviews(_ subviews: [UIView]){
+        subviews.forEach {
+            addSubview($0)
+        }
+    }
+
     func removeSubviews(){
         subviews.forEach {
             $0.removeFromSuperview()
         }
     }
     
-    func clip(to view: UIView, with inset: UIEdgeInsets = .zero){
+    func clip(to view: UIView,
+              with inset: UIEdgeInsets = .zero,
+              priority: UILayoutPriority = .required){
         NSLayoutConstraint.activate([
-            topAnchor.constraint(equalTo: view.topAnchor, constant: inset.top),
-            leftAnchor.constraint(equalTo: view.leftAnchor, constant: inset.left),
-            rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0 - inset.right),
-            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0 - inset.bottom)
+            topAnchor.constraint(equalTo: view.topAnchor, constant: inset.top).withPriority(priority),
+            leftAnchor.constraint(equalTo: view.leftAnchor, constant: inset.left).withPriority(priority),
+            rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0 - inset.right).withPriority(priority),
+            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0 - inset.bottom).withPriority(priority)
         ])
+    }
+    
+    func removeConstraints(for attribute: NSLayoutConstraint.Attribute){
+        let constraints = constraints.filter({ $0.firstAttribute == attribute })
+        removeConstraints(constraints)
     }
     
     func removeGestureRecognizers(){

@@ -11,11 +11,11 @@ struct AlertAction{
     var action: ((UIAlertAction) -> Void)? = nil
 }
 
-//fileprivate var currentHUD: HUD?
-
 enum NavigationBarEdge{
     case left,right
 }
+
+typealias Closure = () -> ()
 
 func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
     var screenshotImage :UIImage?
@@ -30,6 +30,15 @@ func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
 }
 
 extension UIViewController {
+    func setDismissKeyboardOnTap() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     //MARK: - Navigation Bar
     func setNavBar(cornerRadius: CGFloat,
@@ -53,7 +62,7 @@ extension UIViewController {
         
     }
     
-    func presentErrorAlert(completionHandler: ( () -> () )? = nil){
+    func presentErrorAlert(completionHandler: Closure? = nil){
         showAlert(withTitle: "Ошибка",
                   message: "Что-то пошло не так. Попробуйте позже",
                   actions: [AlertAction(text: "Ок",
@@ -62,29 +71,37 @@ extension UIViewController {
         })])
     }
     
+    func addBackButtonWithPop(){
+        addButton(to: .left,
+                  withImage: UIImage(systemName: "chevron.left"),
+                  selector: #selector(pop))
+    }
+    
+    @objc
+    private func pop(){
+        navigationController?.popViewController(animated: true)
+    }
+    
     func addButton(to edge: NavigationBarEdge,
                    withImage image: UIImage? = nil,
                    spacing: CGFloat = .zero,
                    title: String? = nil,
-                   titleColor: UIColor? = nil,
-                   titleFont: UIFont = .systemFont(ofSize: 18),
+                   titleColor: UIColor = .Black,
+                   titleFont: UIFont = .SFPro(.bold, 17),
                    contentInset: UIEdgeInsets = .init(top: 5,
                                                       left: 5,
                                                       bottom: 5,
                                                       right: 5),
                    selector: Selector){
         let button = UIButton().then {
-            //MARK: - TITLE
+            // Title
             $0.setTitle(title,
                         for: .normal)
             $0.setTitleColor(titleColor,
                              for: .normal)
             $0.titleLabel?.font = titleFont
-            $0.titleLabel?.sizeToFit()
-            if let titleLabel = $0.titleLabel{
-                titleLabel.widthAnchor.constraint(equalToConstant: titleLabel.frame.width).isActive = true
-            }
-            //MARK: - INSET
+            
+            // Inset
             if let _ = image,
                let _ = title{
                 $0.titleEdgeInsets.left = spacing
@@ -95,10 +112,12 @@ extension UIViewController {
                 $0.contentEdgeInsets.right = contentInset.left
                 $0.contentEdgeInsets.left = right
             }
-            //MARK: - IMAGE
+            
+            // Image
             $0.setImage(image, for: .normal)
             $0.imageView?.contentMode = .scaleAspectFit
-            //MARK: - Transforming
+            
+            // Transforming
             if edge == .right{
                 $0.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
                 $0.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
@@ -125,6 +144,23 @@ extension UIViewController {
         } else {
             SKStoreReviewController.requestReview()
         }
+    }
+    
+    func add(_ child: UIViewController, frame: CGRect? = nil) {
+        addChild(child)
+        
+        if let frame = frame {
+            child.view.frame = frame
+        }
+        
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+    }
+    
+    func remove() {
+        willMove(toParent: nil)
+        view.removeFromSuperview()
+        removeFromParent()
     }
     
     func openWebsite(_ string: String){
@@ -163,32 +199,15 @@ extension UIViewController {
     }
     
     func presentViewController(viewController: UIViewController,
-                               presentationStyle: UIModalPresentationStyle,
-                               transitionStyle: UIModalTransitionStyle,
-                               animated: Bool,
-                               completionHandler: ( ()->() )? = nil){
+                               presentationStyle: UIModalPresentationStyle = .fullScreen,
+                               transitionStyle: UIModalTransitionStyle = .coverVertical,
+                               animated: Bool = true,
+                               completionHandler: Closure? = nil){
         viewController.modalPresentationStyle = presentationStyle
         viewController.modalTransitionStyle = transitionStyle
         present(viewController, animated: animated, completion: completionHandler)
     }
     
-    //    func showHUD(animated: Bool = true, completionHandler: ( ()->() )? = nil){
-    //        let hud = HUD()
-    //        currentHUD = hud
-    //        presentViewController(viewController: hud,
-    //                              presentationStyle: .overFullScreen,
-    //                              transitionStyle: .crossDissolve,
-    //                              animated: animated,
-    //                              completionHandler: completionHandler)
-    //    }
-    
-    //    func dismissHUD(animated: Bool = true, completionHandler: ( ()->() )? = nil){
-    //        currentHUD?.dismiss(animated: animated, completion: {
-    //            currentHUD = nil
-    //            completionHandler?()
-    //        })
-    //
-    //    }
     
 }
 

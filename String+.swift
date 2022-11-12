@@ -1,10 +1,11 @@
 import UIKit
 public func getAttributedString(text: String,
                                 color: UIColor,
-                                font: UIFont = UIFont.systemFont(ofSize: 18),
+                                font: UIFont,
                                 kern: Double? = nil,
                                 lineSpacing: Double? = nil,
                                 strikethroughColor: UIColor? = nil,
+                                link: String? = nil,
                                 underlineColor: UIColor? = nil) -> NSAttributedString{
     var attribute: [NSAttributedString.Key: Any] = [
         .foregroundColor: color,
@@ -17,6 +18,11 @@ public func getAttributedString(text: String,
     if let kern = kern {
         attribute.updateValue(kern, forKey: .kern)
     }
+    
+    if let link{
+        attribute.updateValue(link, forKey: .link)
+    }
+    
     if let lineSpacing = lineSpacing {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = lineSpacing
@@ -25,8 +31,4 @@ public func getAttributedString(text: String,
     let finalText = NSAttributedString(string: text, attributes: attribute)
     return finalText
 }
-extension NSMutableAttributedString{
-    func addSpace(){
-        append(NSAttributedString(string: " "))
-    }
-}
+

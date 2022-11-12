@@ -10,8 +10,14 @@ extension UITextField{
         toolbar.sizeToFit()
         inputAccessoryView = toolbar
     }
+    var isEmpty: Bool{
+        (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines) == ""
+    }
 }
 extension UITextView{
+    var isEmpty: Bool{
+        (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines) == ""
+    }
     func addToolbar(withDismissText text: String = "Done"){
         let toolbar = UIToolbar()
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
