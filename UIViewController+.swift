@@ -17,7 +17,7 @@ enum NavigationBarEdge{
 
 typealias Closure = () -> ()
 
-func takeScreenshot(_ shouldSave: Bool = true) -> UIImage? {
+func takeScreenshot() -> UIImage? {
     var screenshotImage :UIImage?
     let layer = UIApplication.shared.keyWindow!.layer
     let scale = UIScreen.main.scale
@@ -50,7 +50,7 @@ extension UIViewController {
                                               width: UIScreen.main.bounds.width,
                                               height: navBarHeight))
         navBarView.do {
-            $0.roundCorners(corners: [.bottomRight, .bottomLeft], radius: cornerRadius)
+            $0.roundCorners([.bottomRight, .bottomLeft], radius: cornerRadius)
             $0.backgroundColor = color
         }
         self.view.addSubview(navBarView)
@@ -59,7 +59,6 @@ extension UIViewController {
     var navBarHeight: CGFloat{
         UIApplication.shared.statusBarFrame.size.height +
         (self.navigationController?.navigationBar.frame.height ?? 0.0)
-        
     }
     
     func presentErrorAlert(completionHandler: Closure? = nil){
@@ -71,10 +70,13 @@ extension UIViewController {
         })])
     }
     
-    func addBackButtonWithPop(){
+    func addBackButtonWithPop(tintColor: UIColor = Colors.black800.color, action: Selector = #selector(pop)){
+        let image = UIImage(systemName: "arrow.left")?
+            .withTintColor(tintColor, renderingMode: .alwaysOriginal)
+            .withConfiguration(UIImage.SymbolConfiguration(weight: .medium))
         addButton(to: .left,
-                  withImage: UIImage(systemName: "chevron.left"),
-                  selector: #selector(pop))
+                  withImage: image,
+                  selector: action)
     }
     
     @objc
@@ -82,17 +84,18 @@ extension UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    @discardableResult
     func addButton(to edge: NavigationBarEdge,
                    withImage image: UIImage? = nil,
                    spacing: CGFloat = .zero,
                    title: String? = nil,
-                   titleColor: UIColor = .Black,
-                   titleFont: UIFont = .SFPro(.bold, 17),
+                   titleColor: UIColor = Colors.black800.color,
+                   titleFont: UIFont = .Body1(.medium),
                    contentInset: UIEdgeInsets = .init(top: 5,
                                                       left: 5,
                                                       bottom: 5,
                                                       right: 5),
-                   selector: Selector){
+                   selector: Selector?) -> UIBarButtonItem{
         let button = UIButton().then {
             // Title
             $0.setTitle(title,
@@ -105,6 +108,7 @@ extension UIViewController {
             if let _ = image,
                let _ = title{
                 $0.titleEdgeInsets.left = spacing
+                $0.titleEdgeInsets.right = -spacing
             }
             $0.contentEdgeInsets = contentInset
             if edge == .right{
@@ -124,17 +128,28 @@ extension UIViewController {
                 $0.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
             }
             
-            $0.addTarget(self,
-                         action: selector,
-                         for: .touchUpInside)
+            if let selector{
+                $0.addTarget(self,
+                             action: selector,
+                             for: .touchUpInside)                
+            }
         }
         let buttonItem = UIBarButtonItem(customView: button)
         switch edge {
         case .left:
-            navigationItem.leftBarButtonItems = [buttonItem]
+            if navigationItem.leftBarButtonItems == nil{
+                navigationItem.leftBarButtonItems = [buttonItem]
+            }else{
+                navigationItem.leftBarButtonItems?.append(buttonItem)
+            }
         case .right:
-            navigationItem.rightBarButtonItems = [buttonItem]
+            if navigationItem.rightBarButtonItems == nil{
+                navigationItem.rightBarButtonItems = [buttonItem]
+            }else{
+                navigationItem.rightBarButtonItems?.append(buttonItem)
+            }
         }
+        return buttonItem
     }
     func presentRateAlert(){
         guard let window = view.window,
@@ -146,7 +161,7 @@ extension UIViewController {
         }
     }
     
-    func add(_ child: UIViewController, frame: CGRect? = nil) {
+    func add(_ child: UIViewController, to view: UIView, frame: CGRect? = nil) {
         addChild(child)
         
         if let frame = frame {
@@ -163,11 +178,9 @@ extension UIViewController {
         removeFromParent()
     }
     
-    func openWebsite(_ string: String){
-        guard let url = URL(string: string) else{return}
+    func openWebsite(_ url: URL){
         present(SFSafariViewController(url: url),
                 animated: true)
-        
     }
     
     func openVideo(from url: URL){

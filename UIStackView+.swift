@@ -15,11 +15,12 @@ extension UIStackView{
         }
     }
     
-    func addArrangedSubviews(_ subviews: [UIView]){
+    func addArrangedSubviews(_ subviews: UIView...){
         subviews.forEach {
             addArrangedSubview($0)
         }
     }
+    
     convenience init(
         axis: NSLayoutConstraint.Axis,
         spacing: CGFloat = 0.0,
