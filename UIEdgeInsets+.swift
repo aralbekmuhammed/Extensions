@@ -10,7 +10,7 @@ extension UIEdgeInsets{
     var vertical: CGFloat {
         top + bottom
     }
-
+    
     init(equalInset: CGFloat) {
         self.init(top: equalInset, left: equalInset, bottom: equalInset, right: equalInset)
     }
@@ -32,7 +32,7 @@ extension UIEdgeInsets{
     }
     
     static var sideInsets: UIEdgeInsets{
-        .init(left: 24, right: 24)
+        .init(left: 16, right: 16)
     }
-
+    
 }

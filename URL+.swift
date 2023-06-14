@@ -7,7 +7,6 @@
 
 import Foundation
 
-extension URL{
-    
+extension URL {
     
 }

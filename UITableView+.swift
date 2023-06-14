@@ -2,6 +2,8 @@ import UIKit
 
 extension UITableView{
     
+    //MARK: - Dequeue
+    
     func dequeueCell<T: UITableViewCell>() -> T {
         dequeueReusableCell(withIdentifier: T.identifier) as! T
     }
@@ -18,6 +20,8 @@ extension UITableView{
         dequeueReusableHeaderFooterView(withIdentifier: .init(describing: T.self)) as! T
     }
     
+    //MARK: - Header
+    
     func register(_ cell: UITableViewCell.Type){
         register(cell, forCellReuseIdentifier: cell.identifier)
     }
@@ -32,12 +36,6 @@ extension UITableView{
     
     func registerNib(_ cell: UITableViewCell.Type){
         register(.init(nibName: cell.identifier, bundle: nil), forCellReuseIdentifier: cell.identifier)
-    }
-    
-    func addRefreshControl(selector:Selector){
-        let rf = UIRefreshControl()
-        self.refreshControl = rf
-        rf.addTarget(nil, action: selector, for: .valueChanged)
     }
     
 }
