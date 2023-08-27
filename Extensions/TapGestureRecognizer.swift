@@ -1,10 +1,3 @@
-//
-//  TapGestureRecognizer.swift
-//  TV Control
-//
-//  Created by Muhammed Aralbek on 07.05.2023.
-//
-
 import UIKit
 
 class TapGestureRecognizer: UITapGestureRecognizer {

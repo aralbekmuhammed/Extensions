@@ -1,6 +1,6 @@
 import Foundation
 
-class PhoneNumberManager{
+struct PhoneNumberManager{
     
     static func formatPhoneNumber(phoneNumber: String, pattern: String = "+7 (###) ###-##-##") -> String {
         let replacmentCharacter: Character = "#"

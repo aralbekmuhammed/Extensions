@@ -1,12 +1,29 @@
-//
-//  SnapKit+.swift
-//  PDF Scanner
-//
-//  Created by Muhammed Aralbek on 22.03.2023.
-//
-
 import SnapKit
 import UIKit
+
+extension UIView {
+    
+    public func square(_ ratio: Float = 1) {
+        snp.makeConstraints { make in
+            make.width.equalTo(snp.height).multipliedBy(ratio)
+        }
+    }
+
+}
+
+extension NSLayoutConstraint{
+    
+    func withPriority(_ p: UILayoutPriority) -> Self {
+        priority = p
+        return self
+    }
+    
+    func withPriority(_ p: Int) -> Self {
+        priority = .init(Float(p))
+        return self
+    }
+    
+}
 
 extension Array where Element == UIView {
     
@@ -33,6 +50,5 @@ extension Array where Element == UIView {
             $0.snp.removeConstraints()
         }
     }
-    
 
 }

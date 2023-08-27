@@ -1,10 +1,3 @@
-//
-//  UIImageView+.swift
-//  Chromecast
-//
-//  Created by Muhammed Aralbek on 18.12.2022.
-//
-
 import UIKit
 
 extension UIImageView{
@@ -14,13 +7,19 @@ extension UIImageView{
         self.contentMode = contentMode
     }
     
-    func setImage(from link: URL){
+    func setImage(from link: URL?){
+        guard let link else {
+            self.image = nil
+            return
+        }
+        
         DispatchQueue.global(qos: .userInitiated).async {
             if let data = try? Data(contentsOf: link){
                 let image = UIImage(data: data)
                 DispatchQueue.main.async {
                     self.image = image
                 }
+            }
         }
     }
     

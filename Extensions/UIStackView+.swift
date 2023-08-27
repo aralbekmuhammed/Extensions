@@ -1,26 +1,6 @@
-//
-//  StackViewExtensions.swift
-//  Carwash Merchant
-//
-//  Created by Мухаммед Аралбек on 30.06.2022.
-//
-
-import Foundation
 import UIKit
 
 extension UIStackView{
-    func removeArrangedSubviews(){
-        arrangedSubviews.forEach {
-            removeArrangedSubview($0)
-            $0.removeFromSuperview()
-        }
-    }
-    
-    func addArrangedSubviews(_ subviews: UIView...){
-        subviews.forEach {
-            addArrangedSubview($0)
-        }
-    }
     
     convenience init(
         axis: NSLayoutConstraint.Axis,
@@ -40,5 +20,24 @@ extension UIStackView{
             isLayoutMarginsRelativeArrangement = true
         }
     }
-
+    
+    func removeArrangedSubviews(){
+        arrangedSubviews.forEach {
+            removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+    }
+    
+    func addArrangedSubviews(_ subviews: [UIView]){
+        subviews.forEach {
+            addArrangedSubviews($0)
+        }
+    }
+    
+    func addArrangedSubviews(_ subviews: UIView...){
+        subviews.forEach {
+            addArrangedSubview($0)
+        }
+    }
+    
 }

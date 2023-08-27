@@ -1,35 +1,11 @@
 import UIKit
 import StoreKit
 import SafariServices
-import AVFoundation
 import AVKit
 import Then
 
-struct AlertAction{
-    let text: String
-    let type: UIAlertAction.Style
-    var action: ((UIAlertAction) -> Void)? = nil
-}
-
-enum NavigationBarEdge{
-    case left,right
-}
-
-typealias Closure = () -> ()
-
-func takeScreenshot() -> UIImage? {
-    var screenshotImage :UIImage?
-    let layer = UIApplication.shared.keyWindow!.layer
-    let scale = UIScreen.main.scale
-    UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
-    guard let context = UIGraphicsGetCurrentContext() else {return nil}
-    layer.render(in:context)
-    screenshotImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    return screenshotImage
-}
-
 extension UIViewController {
+    
     func setDismissKeyboardOnTap() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
@@ -40,40 +16,8 @@ extension UIViewController {
         view.endEditing(true)
     }
     
-    //MARK: - Navigation Bar
-    func setNavBar(cornerRadius: CGFloat,
-                   color: UIColor){
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.isTranslucent = true
-        let navBarView = UIView(frame: CGRect(x: 0,
-                                              y: 0,
-                                              width: UIScreen.main.bounds.width,
-                                              height: navBarHeight))
-        navBarView.do {
-            $0.roundCorners([.bottomRight, .bottomLeft], radius: cornerRadius)
-            $0.backgroundColor = color
-        }
-        self.view.addSubview(navBarView)
-    }
-    
-    var navBarHeight: CGFloat{
-        UIApplication.shared.statusBarFrame.size.height +
-        (self.navigationController?.navigationBar.frame.height ?? 0.0)
-    }
-    
-    func presentErrorAlert(completionHandler: Closure? = nil){
-        showAlert(withTitle: "Ошибка",
-                  message: "Что-то пошло не так. Попробуйте позже",
-                  actions: [AlertAction(text: "Ок",
-                                        type: .default, action: { _ in
-            completionHandler?()
-        })])
-    }
-    
-    func addBackButtonWithPop(tintColor: UIColor = Colors.black800.color, action: Selector = #selector(pop)){
-        let image = UIImage(systemName: "arrow.left")?
-            .withTintColor(tintColor, renderingMode: .alwaysOriginal)
-            .withConfiguration(UIImage.SymbolConfiguration(weight: .medium))
+    func addBackButtonWithPop(action: Selector = #selector(pop)){
+        let image = <#TODO#>
         addButton(to: .left,
                   withImage: image,
                   selector: action)
@@ -89,8 +33,8 @@ extension UIViewController {
                    withImage image: UIImage? = nil,
                    spacing: CGFloat = .zero,
                    title: String? = nil,
-                   titleColor: UIColor = Colors.black800.color,
-                   titleFont: UIFont = .Body1(.medium),
+                   titleColor: UIColor = <#TODO#>,
+                   titleFont: UIFont = <#TODO#>,
                    contentInset: UIEdgeInsets = .init(top: 5,
                                                       left: 5,
                                                       bottom: 5,
@@ -131,7 +75,7 @@ extension UIViewController {
             if let selector{
                 $0.addTarget(self,
                              action: selector,
-                             for: .touchUpInside)                
+                             for: .touchUpInside)
             }
         }
         let buttonItem = UIBarButtonItem(customView: button)
@@ -151,6 +95,7 @@ extension UIViewController {
         }
         return buttonItem
     }
+    
     func presentRateAlert(){
         guard let window = view.window,
               let scene = window.windowScene else{return}
@@ -193,34 +138,41 @@ extension UIViewController {
         }
     }
     
-    func callToPhoneNumber(_ phoneNumber: String){
-        guard let number = URL(string: "tel://" + phoneNumber) else {print("looks like it's something wrong with phone number"); return }
-        UIApplication.shared.open(number)
-    }
-    
     func showAlert(withTitle: String?,
                    message: String?,
-                   alpha: CGFloat = 1,
                    style: UIAlertController.Style = .alert,
-                   actions: [AlertAction] = [AlertAction(text: "Ок", type: .default)]){
+                   actions: [AlertAction] = [AlertAction(text: "Ок")] ) {
         let alert = UIAlertController(title: withTitle, message: message, preferredStyle: style)
-        alert.view.alpha = alpha
         actions.forEach { action in
-            alert.addAction(UIAlertAction(title: action.text, style: action.type, handler: action.action))
+            alert.addAction(.init(title: action.text, style: action.type, handler: { _ in
+                action.action?()
+            }))
         }
         present(alert, animated: true, completion: nil)
     }
     
-    func presentViewController(viewController: UIViewController,
-                               presentationStyle: UIModalPresentationStyle = .fullScreen,
-                               transitionStyle: UIModalTransitionStyle = .coverVertical,
-                               animated: Bool = true,
-                               completionHandler: Closure? = nil){
+    func present(_ viewController: UIViewController,
+                 presentationStyle: UIModalPresentationStyle = .fullScreen,
+                 transitionStyle: UIModalTransitionStyle = .coverVertical,
+                 animated: Bool = true,
+                 completionHandler: Closure? = nil){
         viewController.modalPresentationStyle = presentationStyle
         viewController.modalTransitionStyle = transitionStyle
         present(viewController, animated: animated, completion: completionHandler)
     }
     
-    
 }
 
+extension UIViewController {
+    
+    enum NavigationBarEdge{
+        case left,right
+    }
+    
+    struct AlertAction{
+        let text: String
+        var type: UIAlertAction.Style = .default
+        var action: Closure? = nil
+    }
+    
+}

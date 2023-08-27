@@ -1,45 +1,11 @@
 import UIKit
 import Combine
 
-extension UITextField{
-    
-    func addToolbar(withDismissText text: String = "Done"){
-        let toolbar = UIToolbar()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-                                        target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: text, style: .done,
-                                         target: self, action: #selector(endEditing))
-        toolbar.setItems([flexSpace, doneButton], animated: false)
-        toolbar.sizeToFit()
-        inputAccessoryView = toolbar
-    }
-    
-    var textPublisher: AnyPublisher<String, Never> {
-        NotificationCenter.default
-            .publisher(for: UITextField.textDidChangeNotification, object: self)
-            .map { ($0.object as? UITextField)?.text  ?? "" }
-            .eraseToAnyPublisher()
-    }
-    
-    var editingPublisher: AnyPublisher<Bool, Never> {
-        Publishers.Merge(
-            NotificationCenter.default
-                .publisher(for: UITextField.textDidBeginEditingNotification),
-            NotificationCenter.default
-                .publisher(for: UITextField.textDidEndEditingNotification)
-        )
-        .map{
-            ($0.object as? UITextField)?.isFirstResponder ?? false
-        }
-        .eraseToAnyPublisher()
-    }
+extension UITextView {
     
     var isEmpty: Bool{
         (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines) == ""
     }
-    
-}
-extension UITextView{
     
     func textPublisher() -> AnyPublisher<String, Never> {
         NotificationCenter.default
@@ -59,10 +25,6 @@ extension UITextView{
             ($0.object as? UITextView)?.isFirstResponder ?? false
         }
         .eraseToAnyPublisher()
-    }
-    
-    var isEmpty: Bool{
-        (text ?? "").trimmingCharacters(in: .whitespacesAndNewlines) == ""
     }
     
     func addToolbar(withDismissText text: String = "Done"){
@@ -85,3 +47,4 @@ extension UITextView{
     }
     
 }
+

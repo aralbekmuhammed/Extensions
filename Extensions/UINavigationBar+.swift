@@ -1,10 +1,3 @@
-//
-//  UINavigationBar+.swift
-//  Carwash
-//
-//  Created by Muhammed Aralbek on 04.10.2022.
-//
-
 import UIKit
  
 extension UINavigationBar{
@@ -15,6 +8,13 @@ extension UINavigationBar{
         if #available(iOS 15.0, *) {
             compactScrollEdgeAppearance = appearance
         }
+    }
+    
+    func setBackgroundColor(to color: UIColor){
+        guard let copy = compactAppearance?.copy() as? UINavigationBarAppearance else { return }
+        copy.backgroundColor = color
+        copy.shadowColor = color
+        setAppearance(copy)
     }
 }
 

@@ -1,5 +1,4 @@
 import UIKit
-import Then
 
 extension UIEdgeInsets{
     
@@ -29,10 +28,6 @@ extension UIEdgeInsets{
         self.bottom = bottom
         self.right = right
         self.left = left
-    }
-    
-    static var sideInsets: UIEdgeInsets{
-        .init(left: 16, right: 16)
     }
     
 }

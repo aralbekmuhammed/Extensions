@@ -1,10 +1,3 @@
-//
-//  UICollectionView+.swift
-//  ChatGPT
-//
-//  Created by Muhammed Aralbek on 05.03.2023.
-//
-
 import UIKit
 
 extension UICollectionView{

@@ -1,10 +1,3 @@
-//
-//  UIColor+.swift
-//  LED Light
-//
-//  Created by Muhammed Aralbek on 18.11.2022.
-//
-
 import UIKit.UIColor
 
 extension UIColor{

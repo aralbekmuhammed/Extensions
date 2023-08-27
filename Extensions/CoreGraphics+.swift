@@ -1,11 +1,3 @@
-//
-//  CGSize+.swift
-//  ChatGPT
-//
-//  Created by Muhammed Aralbek on 04.03.2023.
-//
-
-import Foundation
 import UIKit
 
 extension CGImagePropertyOrientation {
@@ -25,9 +17,15 @@ extension CGImagePropertyOrientation {
 }
 
 extension CGSize{
+    
+    var center: CGPoint {
+        .init(x: width / 2, y: height / 2)
+    }
+
     init(square: CGFloat){
         self.init(width: square, height: square)
     }
+    
 }
 
 extension CGPoint{
@@ -45,7 +43,6 @@ extension CGRect {
 extension Array where Element == CGPoint {
     var bezierPath: UIBezierPath{
         let path = UIBezierPath()
-        
         if count > 1 {
             path.move(to: first!)
             
@@ -56,7 +53,6 @@ extension Array where Element == CGPoint {
             
             path.close()
         }
-        
         return path        
     }
 }

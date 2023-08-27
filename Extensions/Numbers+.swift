@@ -1,10 +1,3 @@
-//
-//  intExtension.swift
-//  Carwash Merchant
-//
-//  Created by Мухаммед Аралбек on 05.06.2022.
-//
-
 import Foundation
 
 extension Int{

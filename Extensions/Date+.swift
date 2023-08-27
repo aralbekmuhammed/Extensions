@@ -1,10 +1,3 @@
-//
-//  DateExtension.swift
-//  Carwash Merchant
-//
-//  Created by Мухаммед Аралбек on 14.06.2022.
-//
-
 import Foundation
 
 extension Date{
@@ -27,19 +20,16 @@ extension Date{
     
 }
 
-extension Locale {
-    static func preferredLocale() -> Locale {
-        guard let preferredIdentifier = Locale.preferredLanguages.first else {
-            return Locale.current
-        }
-        return Locale(identifier: preferredIdentifier)
-    }
-}
-
 extension DateFormatter{
     convenience init(dateFormat: String){
         self.init()
         self.dateFormat = dateFormat
-        self.locale = .preferredLocale()
+        self.locale = {
+            guard let preferredIdentifier = Locale.preferredLanguages.first else {
+                return Locale.current
+            }
+            return Locale(identifier: preferredIdentifier)
+        }()
     }
 }
+
